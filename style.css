@@ -33,3 +33,9 @@ body {
     user-select: none;
 
 }
+
+.img {
+    width: 60px;
+    height: 60px;
+    mix-blend-mode: multiply;
+}
