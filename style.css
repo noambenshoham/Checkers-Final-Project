@@ -39,3 +39,11 @@ body {
     height: 60px;
     mix-blend-mode: multiply;
 }
+
+.selected {
+    background-color: rgb(20, 198, 20);
+}
+
+.possible-move {
+    background-color: rgb(165, 235, 59);
+}
