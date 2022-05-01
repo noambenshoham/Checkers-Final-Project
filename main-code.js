@@ -27,7 +27,7 @@ function createCheckersBoard() {
     }
     boardData = new BoardData();
 }
-4
+
 window.addEventListener('load', createCheckersBoard);
 
 function onCellClick(row, col) {
@@ -39,23 +39,7 @@ function onCellClick(row, col) {
         selectedCell.classList.add('selected');
         piece = boardData.getPiece(row, col);
         if (piece) {
-            let possibleMoves = []
-            for (cell of piece.nextCellsInfo()) {
-                pieceInNextCell = boardData.getPiece(cell[0], cell[1])
-                if (pieceInNextCell && pieceInNextCell.player !== piece.player) {
-                    let jump = cell;
-                    // Better than direction of player because backward eat in the future.
-                    if (cell[0] > piece.row) jump[0] += 1
-                    if (cell[0] < piece.row) jump[0] -= 1
-                    if (cell[1] > piece.col) jump[1] += 1
-                    if (cell[1] < piece.col) jump[1] -= 1
-                    possibleMoves = possibleMoves.concat([jump])
-                } else if (pieceInNextCell === undefined) {
-                    possibleMoves = possibleMoves.concat([cell])
-                }
-            }
-            possibleMoves = boardData.filterCells(possibleMoves);
-            piece.moves = possibleMoves;
+            piece.moves = piece.getJumpOrStepMoves()
             boardData.paintPossibleMoves(piece);
         }
         selectedPiece = piece
@@ -89,7 +73,42 @@ class Pieces {
         cells.push([this.row + direction, this.col + 1])
         cells.push([this.row + direction, this.col - 1])
 
-        return boardData.filterCells(cells);
+        return this.filterCells(cells);
+    }
+    getJumpOrStepMoves() {
+        // Maybe add "jump" for jump moves in the list [[3,5], [3, 3], 'jump']
+        // and "step" for step moves
+        // then when try jump - get the info from the list.
+        let possibleMoves = []
+        for (const cell of this.nextCellsInfo()) {
+            pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+            if (pieceInNextCell && pieceInNextCell.player !== piece.player) {
+                let jump = cell;
+                // Better than direction of player because backward eat in the future.
+                if (cell[0] > piece.row) jump[0] += 1
+                if (cell[0] < piece.row) jump[0] -= 1
+                if (cell[1] > piece.col) jump[1] += 1
+                if (cell[1] < piece.col) jump[1] -= 1
+                possibleMoves = possibleMoves.concat([jump])
+            } else if (pieceInNextCell === undefined) {
+                possibleMoves = possibleMoves.concat([cell])
+            }
+        }
+        possibleMoves = this.filterCells(possibleMoves);
+        return possibleMoves;
+    }
+    filterCells(outBoardCells) {
+        // Out of border:
+        let filteredCells = [];
+        for (let cell of outBoardCells) {
+            const absoluteRow = cell[0];
+            const absoluteCol = cell[1];
+            if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
+                filteredCells.push(cell);
+            }
+
+        }
+        return filteredCells;
     }
 }
 
@@ -113,19 +132,7 @@ class BoardData {
         }
         return false
     }
-    filterCells(outBoardCells) {
-        // Out of border:
-        let filteredCells = [];
-        for (let cell of outBoardCells) {
-            const absoluteRow = cell[0];
-            const absoluteCol = cell[1];
-            if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
-                filteredCells.push(cell);
-            }
 
-        }
-        return filteredCells;
-    }
     clearBoard() {
         for (let i = 0; i < BOARD_SIZE; i++) {
             for (let j = 0; j < BOARD_SIZE; j++) {
