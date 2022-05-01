@@ -49,6 +49,14 @@ class Pieces {
         possibleMoves = this.filterCells(possibleMoves);
         return possibleMoves;
     }
+    findEnemyCell(row, col) {
+        let enemyCell = []
+        if (this.row < row) enemyCell.push(this.row + 1)
+        if (this.row > row) enemyCell.push(this.row - 1)
+        if (this.col < col) enemyCell.push(this.col + 1)
+        if (this.col > col) enemyCell.push(this.col - 1)
+        return enemyCell
+    }
     filterCells(outBoardCells) {
         // Out of border:
         let filteredCells = [];

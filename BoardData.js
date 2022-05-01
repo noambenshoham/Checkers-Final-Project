@@ -4,20 +4,27 @@ class BoardData {
     }
     tryMove(selectedPiece, row, col) {
         if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
+            let moveTo = boardEl.rows[row].cells[col];
             if (Math.abs(selectedPiece.row - row) !== 1) { // eat
-                console.log('try eat')
-                return true
-            } else { // regular move
-                let moveTo = boardEl.rows[row].cells[col];
-                moveTo.appendChild(selectedPiece.img);
-                selectedPiece.row = row;
-                selectedPiece.col = col;
-                return true
+                let enemyCell = selectedPiece.findEnemyCell(row, col)
+                this.removePiece(enemyCell[0], enemyCell[1])
+                boardEl.rows[enemyCell[0]].cells[enemyCell[1]].innerHTML = '';
             }
+            selectedPiece.row = row;
+            selectedPiece.col = col;
+            moveTo.appendChild(selectedPiece.img);
+            return true
         }
         return false
     }
-
+    removePiece(row, col) {
+        for (let i = 0; i < this.pieces.length; i++) {
+            const piece = this.pieces[i];
+            if (piece.row === row && piece.col === col) {
+                this.pieces.splice(i, 1);
+            }
+        }
+    }
     clearBoard() {
         for (let i = 0; i < BOARD_SIZE; i++) {
             for (let j = 0; j < BOARD_SIZE; j++) {
