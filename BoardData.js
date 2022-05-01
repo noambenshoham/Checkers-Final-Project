@@ -1,21 +1,33 @@
 class BoardData {
     constructor() {
         this.pieces = this.getInitialPieces();
+        this.currentPlayer = WHITE_PLAYER; // White allways beggins (:
     }
     tryMove(selectedPiece, row, col) {
+        // Returns true if the cell is in the possible move options.
         if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
-            let moveTo = boardEl.rows[row].cells[col];
+            // Check if clicked in mind of jump and eat by the absolute distance of the move.
             if (Math.abs(selectedPiece.row - row) !== 1) { // eat
-                let enemyCell = selectedPiece.findEnemyCell(row, col)
-                this.removePiece(enemyCell[0], enemyCell[1])
+                let enemyCell = selectedPiece.findEnemyCell(row, col);
+                this.removePiece(enemyCell[0], enemyCell[1]);
                 boardEl.rows[enemyCell[0]].cells[enemyCell[1]].innerHTML = '';
             }
             selectedPiece.row = row;
             selectedPiece.col = col;
+            let moveTo = boardEl.rows[row].cells[col];
             moveTo.appendChild(selectedPiece.img);
+            this.endTurn()
+
             return true
         }
         return false
+    }
+    endTurn() {
+        if (this.currentPlayer === WHITE_PLAYER) {
+            this.currentPlayer = BLACK_PLAYER;
+        } else {
+            this.currentPlayer = WHITE_PLAYER;
+        }
     }
     removePiece(row, col) {
         for (let i = 0; i < this.pieces.length; i++) {

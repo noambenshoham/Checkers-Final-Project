@@ -26,12 +26,12 @@ class Pieces {
         return this.filterCells(cells);
     }
     getJumpOrStepMoves() {
-        // Maybe add "jump" for jump moves in the list [[3,5], [3, 3], 'jump']
-        // and "step" for step moves
-        // then when try jump - get the info from the list.
+        if (this.player !== boardData.currentPlayer)
+            return []
+
         let possibleMoves = []
         for (const cell of this.nextCellsInfo()) {
-            pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+            let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
             if (pieceInNextCell && pieceInNextCell.player !== piece.player) {
                 let jumpTo = cell;
                 // Better than direction of player because backward eat in the future.

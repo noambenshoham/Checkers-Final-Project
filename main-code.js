@@ -8,7 +8,6 @@ const WHITE_PLAYER = 'white_player';
 let boardData;
 let selectedPiece;
 let piece;
-let pieceInNextCell;
 
 function createCheckersBoard() {
     boardEl.classList.add("checkersBoard");
