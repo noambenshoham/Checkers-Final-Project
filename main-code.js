@@ -54,6 +54,7 @@ function onCellClick(row, col) {
                     possibleMoves = possibleMoves.concat([cell])
                 }
             }
+            possibleMoves = boardData.filterCells(possibleMoves);
             piece.moves = possibleMoves;
             boardData.paintPossibleMoves(piece);
         }
@@ -88,18 +89,10 @@ class Pieces {
         cells.push([this.row + direction, this.col + 1])
         cells.push([this.row + direction, this.col - 1])
 
-        let filteredCells = [];
-        for (let cell of cells) {
-            const absoluteRow = cell[0];
-            const absoluteCol = cell[1];
-            if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
-                filteredCells.push(cell);
-            }
-
-        }
-        return filteredCells;
+        return boardData.filterCells(cells);
     }
 }
+
 
 class BoardData {
     constructor() {
@@ -119,6 +112,19 @@ class BoardData {
             }
         }
         return false
+    }
+    filterCells(outBoardCells) {
+        // Out of border:
+        let filteredCells = [];
+        for (let cell of outBoardCells) {
+            const absoluteRow = cell[0];
+            const absoluteCol = cell[1];
+            if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
+                filteredCells.push(cell);
+            }
+
+        }
+        return filteredCells;
     }
     clearBoard() {
         for (let i = 0; i < BOARD_SIZE; i++) {
