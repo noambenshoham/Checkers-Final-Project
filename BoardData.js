@@ -2,6 +2,7 @@ class BoardData {
     constructor() {
         this.pieces = this.getInitialPieces();
         this.currentPlayer = WHITE_PLAYER; // White allways beggins (:
+        this.winner = undefined
     }
     tryMove(selectedPiece, row, col) {
         // Returns true if the cell is in the possible move options.
@@ -16,8 +17,8 @@ class BoardData {
             selectedPiece.col = col;
             let moveTo = boardEl.rows[row].cells[col];
             moveTo.appendChild(selectedPiece.img);
+            this.isGameOver()
             this.endTurn()
-
             return true
         }
         return false
@@ -27,6 +28,24 @@ class BoardData {
             this.currentPlayer = BLACK_PLAYER;
         } else {
             this.currentPlayer = WHITE_PLAYER;
+        }
+    }
+    isGameOver() {
+        let whitePieces = 0
+        let blackPieces = 0
+        for (const piece of this.pieces) {
+            if (piece.player === WHITE_PLAYER)
+                whitePieces++;
+            else blackPieces++;
+        }
+        if (whitePieces === 0) this.winner = BLACK_PLAYER;
+        else if (blackPieces === 0)
+            this.winner = WHITE_PLAYER;
+        if (this.winner) {
+            let winnerMessage = document.createElement('div')
+            winnerMessage.classList.add('winner')
+            winnerMessage.innerHTML = 'The winner is: ' + this.winner;
+            boardEl.appendChild(winnerMessage);
         }
     }
     removePiece(row, col) {

@@ -47,3 +47,14 @@ body {
 .possible-move {
     background-color: rgb(165, 235, 59);
 }
+
+.winner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 50px;
+    border-radius: 10px;
+    width: max-content;
+}

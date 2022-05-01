@@ -26,7 +26,7 @@ class Pieces {
         return this.filterCells(cells);
     }
     getJumpOrStepMoves() {
-        if (this.player !== boardData.currentPlayer)
+        if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
 
         let possibleMoves = []
