@@ -8,6 +8,7 @@ const WHITE_PLAYER = 'white_player';
 let boardData;
 let selectedPiece;
 let piece;
+let pieceInNextCell;
 
 function createCheckersBoard() {
     boardEl.classList.add("checkersBoard");
@@ -37,7 +38,29 @@ function onCellClick(row, col) {
     } else {
         selectedCell.classList.add('selected');
         piece = boardData.getPiece(row, col);
-        if (piece) boardData.paintPossibleMoves(piece);
+        if (piece) {
+            let possibleMoves = []
+            for (cell of piece.nextCellsInfo()) {
+                pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+                if (pieceInNextCell && pieceInNextCell.player !== piece.player) {
+                    let jump = cell;
+                    console.log('ENEMY!')
+                    // Better than direction of player because backward eat in the future.
+                    console.log(cell)
+                    if (cell[0] > piece.row) jump[0] += 1
+                    if (cell[0] < piece.row) jump[0] -= 1
+                    if (cell[1] > piece.col) jump[1] += 1
+                    if (cell[1] < piece.col) jump[1] -= 1
+                    console.log(jump)
+                    possibleMoves = possibleMoves.concat([jump])
+                } else if (pieceInNextCell === undefined) {
+                    console.log('empty')
+                    possibleMoves = possibleMoves.concat([cell])
+                }
+            }
+            piece.moves = possibleMoves;
+            boardData.paintPossibleMoves(piece);
+        }
         selectedPiece = piece
 
     }
@@ -51,9 +74,9 @@ class Pieces {
         this.type = type;
         this.player = player;
         this.img = this.imgToElement(imgPath);
+        // It is a good idea :) 
+        this.moves = [];
 
-        // Deleted because needs update after every move. I prefer the regular way.
-        // this.moves = this.getPossibleMoves();
     }
     imgToElement(imgPath) {
         let newElement = document.createElement('img');
@@ -63,23 +86,23 @@ class Pieces {
         cell.appendChild(newElement)
         return newElement
     }
-    getPossibleMoves() {
-        let moves = [];
+    nextCellsInfo() {
+        let cells = [];
         let direction = 1;
         if (this.player === WHITE_PLAYER) direction = -1;
-        moves.push([this.row + direction, this.col + 1])
-        moves.push([this.row + direction, this.col - 1])
+        cells.push([this.row + direction, this.col + 1])
+        cells.push([this.row + direction, this.col - 1])
 
-        let filteredMoves = [];
-        for (let move of moves) {
-            const absoluteRow = move[0];
-            const absoluteCol = move[1];
+        let filteredCells = [];
+        for (let cell of cells) {
+            const absoluteRow = cell[0];
+            const absoluteCol = cell[1];
             if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
-                filteredMoves.push(move);
+                filteredCells.push(cell);
             }
 
         }
-        return filteredMoves;
+        return filteredCells;
     }
 }
 
@@ -87,21 +110,32 @@ class BoardData {
     constructor() {
         this.pieces = this.getInitialPieces();
     }
-    tryRegularMove(piece, row, col) {
-        console.log(piece.moves)
-        console.log([row, col])
-        if (piece.getPossibleMoves().some(element => element.toString() === [row, col].toString())) {
-            let moveTo = boardEl.rows[row].cells[col];
-            moveTo.innerHTML = ''
 
-            moveTo.appendChild(piece.img);
-            piece.row = row;
-            piece.col = col;
+    tryRegularMove(selectedPiece, row, col) {
+        if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
+            let moveTo = boardEl.rows[row].cells[col];
+            moveTo.appendChild(selectedPiece.img);
+            selectedPiece.row = row;
+            selectedPiece.col = col;
             return true
         }
+
         return false
     }
+    // tryMoveO() {
+    //     if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
+    //         if (pieceInNextCell && pieceInNextCell.player !== piece.player) { // eat
 
+    //         } else { // regular move
+    //                 let moveTo = boardEl.rows[row].cells[col];
+    //                 moveTo.appendChild(selectedPiece.img);
+    //                 selectedPiece.row = row;
+    //                 selectedPiece.col = col;
+    //                 return true
+    //         }
+    //     }
+    //     return false
+    // }
 
     clearBoard() {
         for (let i = 0; i < BOARD_SIZE; i++) {
@@ -119,7 +153,7 @@ class BoardData {
         }
     }
     paintPossibleMoves(piece) {
-        let possibleMoves = piece.getPossibleMoves();
+        let possibleMoves = piece.moves;
         for (let possibleMove of possibleMoves) {
             let possibleCell = boardEl.rows[possibleMove[0]].cells[possibleMove[1]];
             possibleCell.classList.add('possible-move');
