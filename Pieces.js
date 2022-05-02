@@ -25,11 +25,11 @@ class Pieces {
 
         return this.filterOutBoardCells(cells);
     }
-    getPossibleMoves() {
+    getCaptureMoves() {
         if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
 
-        let possibleMoves = []
+        let possibleCaptureMoves = []
         for (const cell of this.oneStepCellsInfo()) {
             let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
             if (pieceInNextCell && pieceInNextCell.player !== this.player) {
@@ -40,13 +40,22 @@ class Pieces {
                 if (cell[1] < this.col) jumpTo[1] -= 1
                 let emptyJumpTo = boardData.getPiece(jumpTo[0], jumpTo[1])
                 if (emptyJumpTo === undefined)
-                    possibleMoves = possibleMoves.concat([jumpTo])
-            } else if (pieceInNextCell === undefined) {
-                possibleMoves = possibleMoves.concat([cell])
+                    possibleCaptureMoves = possibleCaptureMoves.concat([jumpTo])
+            }
+            possibleCaptureMoves = this.filterOutBoardCells(possibleCaptureMoves);
+            return possibleCaptureMoves;
+        }
+    }
+    getOneStepMoves() {
+        let possibleRegularMoves = []
+        for (const cell of this.oneStepCellsInfo()) {
+            let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+            if (pieceInNextCell === undefined) {
+                possibleRegularMoves = possibleRegularMoves.concat([cell])
             }
         }
-        possibleMoves = this.filterOutBoardCells(possibleMoves);
-        return possibleMoves;
+        possibleRegularMoves = this.filterOutBoardCells(possibleRegularMoves);
+        return possibleRegularMoves;
     }
     filterOutBoardCells(cells) {
         let filteredCells = [];

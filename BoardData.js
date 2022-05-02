@@ -60,6 +60,14 @@ class BoardData {
             boardEl.appendChild(winnerMessage);
         }
     }
+    checkPossibleCaptures() {
+        // No need to check who is the current player. It will return [] anyway.
+        let possibleCaptures = [];
+        for (const piece of this.pieces) {
+            possibleCaptures = possibleCaptures.concat(piece.getCaptureMoves())
+        }
+        if (possibleCaptures.length === 0) return false
+    }
     removePiece(row, col) {
         for (let i = 0; i < this.pieces.length; i++) {
             const piece = this.pieces[i];
