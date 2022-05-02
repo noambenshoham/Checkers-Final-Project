@@ -1,7 +1,7 @@
 class BoardData {
     constructor() {
         this.pieces = this.getInitialPieces();
-        this.currentPlayer = WHITE_PLAYER; // White allways beggins (:
+        this.currentPlayer = WHITE_PLAYER;
         this.winner = undefined
     }
     tryMove(selectedPiece, row, col) {
@@ -9,9 +9,9 @@ class BoardData {
         if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
             // Check if clicked in mind of jump and eat by the absolute distance of the move.
             if (Math.abs(selectedPiece.row - row) !== 1) { // eat
-                let enemyCell = selectedPiece.findEnemyCell(row, col);
-                this.removePiece(enemyCell[0], enemyCell[1]);
-                boardEl.rows[enemyCell[0]].cells[enemyCell[1]].innerHTML = '';
+                let eatenPieceCell = selectedPiece.findEatenPieceCell(row, col);
+                this.removePiece(eatenPieceCell[0], eatenPieceCell[1]);
+                boardEl.rows[eatenPieceCell[0]].cells[eatenPieceCell[1]].innerHTML = '';
             }
             selectedPiece.row = row;
             selectedPiece.col = col;
@@ -31,11 +31,20 @@ class BoardData {
         }
     }
     isGameOver() {
+        let whitePieces = 0
+        let blackPieces = 0
         let hasLegalMoves = []
+
         for (const piece of this.pieces) {
+            if (piece.player === WHITE_PLAYER)
+                whitePieces++;
+            else blackPieces++;
             if (piece.player === this.currentPlayer)
-                hasLegalMoves = hasLegalMoves.concat(piece.getPossibleMoves())
+                hasLegalMoves = hasLegalMoves.concat(piece.moves)
         }
+
+        if (whitePieces === 0) this.winner = BLACK_PLAYER;
+        if (blackPieces === 0) this.winner = WHITE_PLAYER;
         if (hasLegalMoves.length === 0) {
             if (this.currentPlayer === WHITE_PLAYER) {
                 this.winner = BLACK_PLAYER;
@@ -43,17 +52,6 @@ class BoardData {
                 this.winner = WHITE_PLAYER;
             }
         }
-        
-        let whitePieces = 0
-        let blackPieces = 0
-        for (const piece of this.pieces) {
-            if (piece.player === WHITE_PLAYER)
-                whitePieces++;
-            else blackPieces++;
-        }
-        if (whitePieces === 0) this.winner = BLACK_PLAYER;
-        else if (blackPieces === 0)
-            this.winner = WHITE_PLAYER;
 
         if (this.winner) {
             let winnerMessage = document.createElement('div')
@@ -70,18 +68,18 @@ class BoardData {
             }
         }
     }
+    getPiece(row, col) {
+        for (const piece of this.pieces) {
+            if (piece.row === row && piece.col === col) {
+                return piece
+            }
+        }
+    }
     clearBoard() {
         for (let i = 0; i < BOARD_SIZE; i++) {
             for (let j = 0; j < BOARD_SIZE; j++) {
                 boardEl.rows[i].cells[j].classList.remove('possible-move');
                 boardEl.rows[i].cells[j].classList.remove('selected');
-            }
-        }
-    }
-    getPiece(row, col) {
-        for (const piece of this.pieces) {
-            if (piece.row === row && piece.col === col) {
-                return piece
             }
         }
     }
@@ -94,8 +92,8 @@ class BoardData {
     }
     getInitialPieces() {
         let result = [];
-        for (let row = 1; row < BOARD_SIZE; row++) {
-            for (let col = 7; col < BOARD_SIZE; col++) {
+        for (let row = 0; row < BOARD_SIZE; row++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
                 if ((row % 2 === 0 && col % 2 !== 0) || (row % 2 !== 0 && col % 2 === 0)) {
                     if (row <= 2) {
                         result.push(new Pieces(row, col, SOLDIER, BLACK_PLAYER, "/images/blackSoldier.jpg"))

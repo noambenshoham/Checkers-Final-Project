@@ -7,7 +7,6 @@ const WHITE_PLAYER = 'white_player';
 
 let boardData;
 let selectedPiece;
-let piece;
 
 function createCheckersBoard() {
     boardEl.classList.add("checkersBoard");
@@ -36,15 +35,11 @@ function onCellClick(row, col) {
         selectedPiece = undefined;
     } else {
         selectedCell.classList.add('selected');
-        piece = boardData.getPiece(row, col);
-        if (piece) {
-            piece.moves = piece.getPossibleMoves()
-            boardData.paintPossibleMoves(piece);
+        selectedPiece = boardData.getPiece(row, col);
+        if (selectedPiece) {
+            selectedPiece.moves = selectedPiece.getPossibleMoves()
+            boardData.paintPossibleMoves(selectedPiece);
         }
-        selectedPiece = piece
-
     }
-
-
 }
 

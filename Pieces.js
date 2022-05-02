@@ -16,29 +16,28 @@ class Pieces {
         cell.appendChild(newElement)
         return newElement
     }
-    nextCellsInfo() {
+    oneStepCellsInfo() {
         let cells = [];
         let direction = 1;
         if (this.player === WHITE_PLAYER) direction = -1;
         cells.push([this.row + direction, this.col + 1])
         cells.push([this.row + direction, this.col - 1])
 
-        return this.filterCells(cells);
+        return this.filterOutBoardCells(cells);
     }
     getPossibleMoves() {
         if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
 
         let possibleMoves = []
-        for (const cell of this.nextCellsInfo()) {
+        for (const cell of this.oneStepCellsInfo()) {
             let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
-            if (pieceInNextCell && pieceInNextCell.player !== piece.player) {
+            if (pieceInNextCell && pieceInNextCell.player !== this.player) {
                 let jumpTo = cell;
-                // Better than direction of player because backward eat in the future.
-                if (cell[0] > piece.row) jumpTo[0] += 1
-                if (cell[0] < piece.row) jumpTo[0] -= 1
-                if (cell[1] > piece.col) jumpTo[1] += 1
-                if (cell[1] < piece.col) jumpTo[1] -= 1
+                if (cell[0] > this.row) jumpTo[0] += 1
+                if (cell[0] < this.row) jumpTo[0] -= 1
+                if (cell[1] > this.col) jumpTo[1] += 1
+                if (cell[1] < this.col) jumpTo[1] -= 1
                 let emptyJumpTo = boardData.getPiece(jumpTo[0], jumpTo[1])
                 if (emptyJumpTo === undefined)
                     possibleMoves = possibleMoves.concat([jumpTo])
@@ -46,21 +45,12 @@ class Pieces {
                 possibleMoves = possibleMoves.concat([cell])
             }
         }
-        possibleMoves = this.filterCells(possibleMoves);
+        possibleMoves = this.filterOutBoardCells(possibleMoves);
         return possibleMoves;
     }
-    findEnemyCell(row, col) {
-        let enemyCell = []
-        if (this.row < row) enemyCell.push(this.row + 1)
-        if (this.row > row) enemyCell.push(this.row - 1)
-        if (this.col < col) enemyCell.push(this.col + 1)
-        if (this.col > col) enemyCell.push(this.col - 1)
-        return enemyCell
-    }
-    filterCells(outBoardCells) {
-        // Out of border:
+    filterOutBoardCells(cells) {
         let filteredCells = [];
-        for (let cell of outBoardCells) {
+        for (let cell of cells) {
             const absoluteRow = cell[0];
             const absoluteCol = cell[1];
             if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
@@ -69,5 +59,13 @@ class Pieces {
 
         }
         return filteredCells;
+    }
+    findEatenPieceCell(row, col) {
+        let enemyCell = []
+        if (this.row < row) enemyCell.push(this.row + 1)
+        if (this.row > row) enemyCell.push(this.row - 1)
+        if (this.col < col) enemyCell.push(this.col + 1)
+        if (this.col > col) enemyCell.push(this.col - 1)
+        return enemyCell
     }
 }
