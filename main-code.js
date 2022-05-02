@@ -39,7 +39,7 @@ function onCellClick(row, col) {
         selectedPiece = boardData.getPiece(row, col);
         if (selectedPiece) {
             selectedPiece.moves = selectedPiece.getCaptureMoves()
-            if (boardData.checkPossibleCaptures() === false) 
+            if (boardData.checkPossibleCaptures() === false)
                 selectedPiece.moves = selectedPiece.getOneStepMoves()
             boardData.paintPossibleMoves(selectedPiece);
         }

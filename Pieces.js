@@ -42,11 +42,15 @@ class Pieces {
                 if (emptyJumpTo === undefined)
                     possibleCaptureMoves = possibleCaptureMoves.concat([jumpTo])
             }
-            possibleCaptureMoves = this.filterOutBoardCells(possibleCaptureMoves);
-            return possibleCaptureMoves;
         }
+        possibleCaptureMoves = this.filterOutBoardCells(possibleCaptureMoves);
+        return possibleCaptureMoves;
     }
+
     getOneStepMoves() {
+        if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
+            return []
+
         let possibleRegularMoves = []
         for (const cell of this.oneStepCellsInfo()) {
             let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
