@@ -31,7 +31,11 @@ window.addEventListener('load', createCheckersBoard);
 function onCellClick(row, col) {
     boardData.clearBoard();
     if (selectedPiece && boardData.tryMove(selectedPiece, row, col)) {
-        // If move is done - get back to the situation of none selected piece. 
+        // If move is done - check if it was capture. If it is, do not end turn yet.
+        if (boardData.doubleCaptureIsOption(selectedPiece))
+            return
+        boardData.endTurn();
+        boardData.isGameOver()
         selectedPiece = undefined;
     } else { // First click because selected piece is undefined.
         let selectedCell = boardEl.rows[row].cells[col];
