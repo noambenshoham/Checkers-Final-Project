@@ -38,7 +38,7 @@ function onCellClick(row, col) {
         selectedCell.classList.add('selected');
         piece = boardData.getPiece(row, col);
         if (piece) {
-            piece.moves = piece.getJumpOrStepMoves()
+            piece.moves = piece.getPossibleMoves()
             boardData.paintPossibleMoves(piece);
         }
         selectedPiece = piece

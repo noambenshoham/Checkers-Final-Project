@@ -25,7 +25,7 @@ class Pieces {
 
         return this.filterCells(cells);
     }
-    getJumpOrStepMoves() {
+    getPossibleMoves() {
         if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
 

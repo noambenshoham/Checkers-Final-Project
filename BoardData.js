@@ -31,6 +31,19 @@ class BoardData {
         }
     }
     isGameOver() {
+        let hasLegalMoves = []
+        for (const piece of this.pieces) {
+            if (piece.player === this.currentPlayer)
+                hasLegalMoves = hasLegalMoves.concat(piece.getPossibleMoves())
+        }
+        if (hasLegalMoves.length === 0) {
+            if (this.currentPlayer === WHITE_PLAYER) {
+                this.winner = BLACK_PLAYER;
+            } else {
+                this.winner = WHITE_PLAYER;
+            }
+        }
+        
         let whitePieces = 0
         let blackPieces = 0
         for (const piece of this.pieces) {
@@ -41,6 +54,7 @@ class BoardData {
         if (whitePieces === 0) this.winner = BLACK_PLAYER;
         else if (blackPieces === 0)
             this.winner = WHITE_PLAYER;
+
         if (this.winner) {
             let winnerMessage = document.createElement('div')
             winnerMessage.classList.add('winner')
@@ -80,8 +94,8 @@ class BoardData {
     }
     getInitialPieces() {
         let result = [];
-        for (let row = 0; row < BOARD_SIZE; row++) {
-            for (let col = 0; col < BOARD_SIZE; col++) {
+        for (let row = 1; row < BOARD_SIZE; row++) {
+            for (let col = 7; col < BOARD_SIZE; col++) {
                 if ((row % 2 === 0 && col % 2 !== 0) || (row % 2 !== 0 && col % 2 === 0)) {
                     if (row <= 2) {
                         result.push(new Pieces(row, col, SOLDIER, BLACK_PLAYER, "/images/blackSoldier.jpg"))
