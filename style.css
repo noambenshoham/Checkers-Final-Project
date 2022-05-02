@@ -4,6 +4,7 @@
 
 body {
     align-items: center;
+    background-color: rgba(71, 227, 123, 0.61);
 }
 
 .checkersBoard {

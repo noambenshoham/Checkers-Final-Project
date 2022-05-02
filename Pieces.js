@@ -25,6 +25,13 @@ class Pieces {
 
         return this.filterOutBoardCells(cells);
     }
+    getPossibleMoves() {
+        let possibleMoves = []
+        possibleMoves = this.getCaptureMoves();
+        if (boardData.checkPossibleCaptures() === false)
+            possibleMoves = this.getOneStepMoves()
+        return possibleMoves
+    }
     getCaptureMoves() {
         if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
@@ -46,7 +53,6 @@ class Pieces {
         possibleCaptureMoves = this.filterOutBoardCells(possibleCaptureMoves);
         return possibleCaptureMoves;
     }
-
     getOneStepMoves() {
         if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
             return []
@@ -77,6 +83,7 @@ class Pieces {
         let enemyCell = []
         if (this.row < row) enemyCell.push(this.row + 1)
         if (this.row > row) enemyCell.push(this.row - 1)
+        
         if (this.col < col) enemyCell.push(this.col + 1)
         if (this.col > col) enemyCell.push(this.col - 1)
         return enemyCell

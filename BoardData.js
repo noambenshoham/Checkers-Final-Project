@@ -2,13 +2,14 @@ class BoardData {
     constructor() {
         this.pieces = this.getInitialPieces();
         this.currentPlayer = WHITE_PLAYER;
-        this.winner = undefined
+        this.winner = undefined;
     }
     tryMove(selectedPiece, row, col) {
-        // Returns true if the cell is in the possible move options.
+        // Returns true if the selected cell is in the possible move options.
         if (selectedPiece.moves.some(element => element.toString() === [row, col].toString())) {
-            // Check if clicked in mind of jump and eat by the absolute distance of the move.
-            if (Math.abs(selectedPiece.row - row) !== 1) { // eat
+            // By the absolute distance of the move - check if clicked in mind to capture.
+            // Capture if true
+            if (Math.abs(selectedPiece.row - row) !== 1) {
                 let eatenPieceCell = selectedPiece.findEatenPieceCell(row, col);
                 this.removePiece(eatenPieceCell[0], eatenPieceCell[1]);
                 boardEl.rows[eatenPieceCell[0]].cells[eatenPieceCell[1]].innerHTML = '';
@@ -17,8 +18,8 @@ class BoardData {
             selectedPiece.col = col;
             let moveTo = boardEl.rows[row].cells[col];
             moveTo.appendChild(selectedPiece.img);
-            this.isGameOver()
             this.endTurn()
+            this.isGameOver()
             return true
         }
         return false
@@ -31,6 +32,7 @@ class BoardData {
         }
     }
     isGameOver() {
+        // After ending turns because maybe an option will be open after the enemy move.
         let whitePieces = 0
         let blackPieces = 0
         let hasLegalMoves = []
@@ -39,8 +41,10 @@ class BoardData {
             if (piece.player === WHITE_PLAYER)
                 whitePieces++;
             else blackPieces++;
-            if (piece.player === this.currentPlayer)
+            if (piece.player === this.currentPlayer) {
+                piece.moves = piece.getPossibleMoves()
                 hasLegalMoves = hasLegalMoves.concat(piece.moves)
+            }
         }
 
         if (whitePieces === 0) this.winner = BLACK_PLAYER;
@@ -61,7 +65,7 @@ class BoardData {
         }
     }
     checkPossibleCaptures() {
-        // No need to check who is the current player. It will return [] anyway.
+        // No need to check who is the current player. It will return an empty array anyway.
         let possibleCaptures = [];
         for (const piece of this.pieces) {
             possibleCaptures = possibleCaptures.concat(piece.getCaptureMoves())

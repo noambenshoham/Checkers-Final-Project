@@ -29,20 +29,18 @@ function createCheckersBoard() {
 window.addEventListener('load', createCheckersBoard);
 
 function onCellClick(row, col) {
-    let selectedCell = boardEl.rows[row].cells[col];
     boardData.clearBoard();
     if (selectedPiece && boardData.tryMove(selectedPiece, row, col)) {
-        selectedPiece.moves = [];
+        // If move is done - get back to the situation of none selected piece. 
         selectedPiece = undefined;
-    } else {
+    } else { // First click because selected piece is undefined.
+        let selectedCell = boardEl.rows[row].cells[col];
         selectedCell.classList.add('selected');
+
         selectedPiece = boardData.getPiece(row, col);
         if (selectedPiece) {
-            selectedPiece.moves = selectedPiece.getCaptureMoves()
-            if (boardData.checkPossibleCaptures() === false)
-                selectedPiece.moves = selectedPiece.getOneStepMoves()
+            selectedPiece.moves = selectedPiece.getPossibleMoves();
             boardData.paintPossibleMoves(selectedPiece);
         }
     }
 }
-
