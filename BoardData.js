@@ -12,7 +12,9 @@ class BoardData {
         if (possibleCaptures.length === 0) return false
     }
     checkIfDoubleCaptureIsOption(selectedPiece) {
+        // If piece has removed in this turn
         if (game.removedPiece) {
+            // Add options of backward capture to the capturing piece.
             game.doubleCapturing = selectedPiece;
             selectedPiece.moves = selectedPiece.getCaptureMoves();
             if (selectedPiece.moves.length !== 0) {

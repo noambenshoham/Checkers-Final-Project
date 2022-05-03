@@ -33,7 +33,7 @@ function onCellClick(row, col) {
     game.boardData.clearBoard();
     if (selectedPiece && game.tryMove(selectedPiece, row, col)) {
         // If move is done and it was a capture - check if another capture is avaiable. 
-        // If so - do not end turn yet.
+        // If so - do not end turn yet and -
         if (game.boardData.checkIfDoubleCaptureIsOption(selectedPiece))
             return
         game.endTurn(selectedPiece)

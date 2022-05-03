@@ -62,9 +62,11 @@ class Game {
         let hasLegalMoves = []
 
         for (const piece of this.boardData.pieces) {
+            // Check if this player have pieces on board.
             if (piece.player === WHITE_PLAYER)
                 whitePieces++;
             else blackPieces++;
+            // Check if this player has legal moves.
             if (piece.player === this.currentPlayer) {
                 piece.moves = piece.getPossibleMoves()
                 hasLegalMoves = hasLegalMoves.concat(piece.moves)
