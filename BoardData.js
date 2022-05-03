@@ -13,7 +13,7 @@ class BoardData {
     }
     checkIfDoubleCaptureIsOption(selectedPiece) {
         if (game.removedPiece) {
-            selectedPiece.doubleCapturing = true;
+            game.doubleCapturing = selectedPiece;
             selectedPiece.moves = selectedPiece.getCaptureMoves();
             if (selectedPiece.moves.length !== 0) {
                 return true

@@ -4,6 +4,8 @@ class Game {
         this.currentPlayer = WHITE_PLAYER;
         this.winner = undefined;
         this.removedPiece = undefined;
+        this.doubleCapturing = undefined;
+
     }
     tryMove(selectedPiece, row, col) {
         // Returns true if the selected cell is in the possible move options.
@@ -30,7 +32,7 @@ class Game {
 
         selectedPiece.moves = [];
         this.removedPiece = undefined;
-        selectedPiece.doubleCapturing = undefined;
+        this.doubleCapturing = undefined;
         selectedPiece = undefined;
     }
     trySoldierToQueen(selectedPiece) {

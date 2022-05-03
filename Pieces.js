@@ -6,7 +6,6 @@ class Pieces {
         this.player = player;
         this.img = this.imgToElement(imgPath);
         this.moves = [];
-        this.doubleCapturing = undefined;
 
     }
     imgToElement(imgPath) {
@@ -18,14 +17,13 @@ class Pieces {
         return newElement
     }
     oneStepCellsInfo() {
-
         let cells = [];
         let direction = 1;
         if (this.player === WHITE_PLAYER) direction = -1;
         cells.push([this.row + direction, this.col + 1])
         cells.push([this.row + direction, this.col - 1])
 
-        if (this.doubleCapturing === true) {
+        if (game.doubleCapturing && game.doubleCapturing.row === this.row && game.doubleCapturing.col === this.col) {
             cells.push([this.row - direction, this.col + 1])
             cells.push([this.row - direction, this.col - 1])
         }
