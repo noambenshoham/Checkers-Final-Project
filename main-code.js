@@ -6,6 +6,7 @@ const BLACK_PLAYER = 'black_player';
 const WHITE_PLAYER = 'white_player';
 
 let boardData;
+let game;
 let selectedPiece;
 
 function createCheckersBoard() {
@@ -23,27 +24,27 @@ function createCheckersBoard() {
             cellElement.addEventListener('click', () => onCellClick(row, col));
         }
     }
-    boardData = new BoardData();
+    game = new Game();
 }
 
 window.addEventListener('load', createCheckersBoard);
 
 function onCellClick(row, col) {
-    boardData.clearBoard();
-    if (selectedPiece && boardData.tryMove(selectedPiece, row, col)) {
+    game.boardData.clearBoard();
+    if (selectedPiece && game.tryMove(selectedPiece, row, col)) {
         // If move is done and it was a capture - check if another capture is avaiable. 
         // If so - do not end turn yet.
-        if (boardData.doubleCaptureIsOption(selectedPiece))
+        if (game.boardData.checkIfDoubleCaptureIsOption(selectedPiece))
             return
-        boardData.endTurn(selectedPiece)
+        game.endTurn(selectedPiece)
     } else { // First click because selected piece is undefined.
         let selectedCell = boardEl.rows[row].cells[col];
         selectedCell.classList.add('selected');
 
-        selectedPiece = boardData.getPiece(row, col);
+        selectedPiece = game.boardData.getPiece(row, col);
         if (selectedPiece) {
             selectedPiece.moves = selectedPiece.getPossibleMoves();
-            boardData.paintPossibleMoves(selectedPiece);
+            game.boardData.paintPossibleMoves(selectedPiece);
         }
     }
 }

@@ -37,24 +37,24 @@ class Pieces {
     getPossibleMoves() {
         let possibleMoves = []
         possibleMoves = this.getCaptureMoves();
-        if (boardData.checkPossibleCaptures() === false)
+        if (game.boardData.checkPossibleCaptures() === false)
             possibleMoves = this.getOneStepMoves()
         return possibleMoves
     }
     getCaptureMoves() {
-        if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
+        if (this.player !== game.currentPlayer || game.winner !== undefined)
             return []
 
         let possibleCaptureMoves = []
         for (const cell of this.oneStepCellsInfo()) {
-            let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+            let pieceInNextCell = game.boardData.getPiece(cell[0], cell[1])
             if (pieceInNextCell && pieceInNextCell.player !== this.player) {
                 let jumpTo = cell;
                 if (cell[0] > this.row) jumpTo[0] += 1
                 if (cell[0] < this.row) jumpTo[0] -= 1
                 if (cell[1] > this.col) jumpTo[1] += 1
                 if (cell[1] < this.col) jumpTo[1] -= 1
-                let emptyJumpTo = boardData.getPiece(jumpTo[0], jumpTo[1])
+                let emptyJumpTo = game.boardData.getPiece(jumpTo[0], jumpTo[1])
                 if (emptyJumpTo === undefined)
                     possibleCaptureMoves = possibleCaptureMoves.concat([jumpTo])
             }
@@ -63,12 +63,12 @@ class Pieces {
         return possibleCaptureMoves;
     }
     getOneStepMoves() {
-        if (this.player !== boardData.currentPlayer || boardData.winner !== undefined)
+        if (this.player !== game.currentPlayer || game.winner !== undefined)
             return []
 
         let possibleRegularMoves = []
         for (const cell of this.oneStepCellsInfo()) {
-            let pieceInNextCell = boardData.getPiece(cell[0], cell[1])
+            let pieceInNextCell = game.boardData.getPiece(cell[0], cell[1])
             if (pieceInNextCell === undefined) {
                 possibleRegularMoves = possibleRegularMoves.concat([cell])
             }
@@ -89,12 +89,12 @@ class Pieces {
         for (let i = 1; i < BOARD_SIZE; i++) {
             let row = this.row + directionRow * i;
             let col = this.col + directionCol * i;
-            if (boardData.getPiece(row, col) === undefined) {
+            if (game.boardData.getPiece(row, col) === undefined) {
                 result.push([row, col]);
-            } else if (this.player !== boardData.getPiece(row, col).player) {
+            } else if (this.player !== game.boardData.getPiece(row, col).player) {
                 result.push([row, col]);
                 return result;
-            } else if (this.player === boardData.getPiece(row, col).player) {
+            } else if (this.player === game.boardData.getPiece(row, col).player) {
                 return result;
             }
         }
