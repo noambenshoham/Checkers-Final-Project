@@ -32,12 +32,20 @@ class BoardData {
             }
         }
     }
-    endTurn() {
+    switchTurns() {
         if (this.currentPlayer === WHITE_PLAYER) {
             this.currentPlayer = BLACK_PLAYER;
         } else {
             this.currentPlayer = WHITE_PLAYER;
         }
+    }
+    endTurn(selectedPiece) {
+        this.removedPiece = undefined;
+        this.trySoldierToQueen(selectedPiece);
+        selectedPiece.doubleCapturing = undefined;
+        this.switchTurns();
+        this.isGameOver()
+        selectedPiece = undefined;
     }
     isGameOver() {
         // After ending turns because maybe an option will be open after the enemy move.

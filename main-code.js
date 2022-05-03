@@ -35,13 +35,7 @@ function onCellClick(row, col) {
         // If so - do not end turn yet.
         if (boardData.doubleCaptureIsOption(selectedPiece))
             return
-
-        boardData.removedPiece = undefined;
-        boardData.trySoldierToQueen(selectedPiece);
-        selectedPiece.doubleCapturing = undefined;
-        boardData.endTurn();
-        boardData.isGameOver()
-        selectedPiece = undefined;
+        boardData.endTurn(selectedPiece)
     } else { // First click because selected piece is undefined.
         let selectedCell = boardEl.rows[row].cells[col];
         selectedCell.classList.add('selected');
