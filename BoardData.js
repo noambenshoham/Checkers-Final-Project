@@ -25,6 +25,7 @@ class BoardData {
     }
     doubleCaptureIsOption(selectedPiece) {
         if (this.removedPiece) {
+            selectedPiece.doubleCapturing = true;
             selectedPiece.moves = selectedPiece.getCaptureMoves();
             if (selectedPiece.moves.length !== 0) {
                 this.removedPiece = undefined;
@@ -118,7 +119,7 @@ class BoardData {
                 if ((row % 2 === 0 && col % 2 !== 0) || (row % 2 !== 0 && col % 2 === 0)) {
                     if (row <= 2) {
                         result.push(new Pieces(row, col, SOLDIER, BLACK_PLAYER, "/images/blackSoldier.jpg"))
-                    } else if (row >= 5) {
+                    } else if (row >= 5 && row !== 6) {
                         result.push(new Pieces(row, col, SOLDIER, WHITE_PLAYER, "/images/whiteSoldier.jpg"))
                     }
                 }

@@ -31,9 +31,12 @@ window.addEventListener('load', createCheckersBoard);
 function onCellClick(row, col) {
     boardData.clearBoard();
     if (selectedPiece && boardData.tryMove(selectedPiece, row, col)) {
-        // If move is done - check if it was capture. If it is, do not end turn yet.
+        // If move is done and it was a capture - check if another capture is avaiable. 
+        // If so - do not end turn yet.
         if (boardData.doubleCaptureIsOption(selectedPiece))
             return
+
+        selectedPiece.doubleCapturing = undefined;
         boardData.endTurn();
         boardData.isGameOver()
         selectedPiece = undefined;

@@ -6,6 +6,7 @@ class Pieces {
         this.player = player;
         this.img = this.imgToElement(imgPath);
         this.moves = [];
+        this.doubleCapturing = undefined;
 
     }
     imgToElement(imgPath) {
@@ -23,6 +24,10 @@ class Pieces {
         cells.push([this.row + direction, this.col + 1])
         cells.push([this.row + direction, this.col - 1])
 
+        if (this.doubleCapturing === true) {
+            cells.push([this.row - direction, this.col + 1])
+            cells.push([this.row - direction, this.col - 1])
+        }
         return this.filterOutBoardCells(cells);
     }
     getPossibleMoves() {
@@ -83,7 +88,7 @@ class Pieces {
         let enemyCell = []
         if (this.row < row) enemyCell.push(this.row + 1)
         if (this.row > row) enemyCell.push(this.row - 1)
-        
+
         if (this.col < col) enemyCell.push(this.col + 1)
         if (this.col > col) enemyCell.push(this.col - 1)
         return enemyCell
