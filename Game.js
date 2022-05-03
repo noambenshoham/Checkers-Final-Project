@@ -27,6 +27,8 @@ class Game {
         this.trySoldierToQueen(selectedPiece);
         this.switchTurns();
         this.isGameOver()
+
+        selectedPiece.moves = [];
         this.removedPiece = undefined;
         selectedPiece.doubleCapturing = undefined;
         selectedPiece = undefined;
