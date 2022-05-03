@@ -73,6 +73,19 @@ class BoardData {
             boardEl.appendChild(winnerMessage);
         }
     }
+    trySoldierToQueen(selectedPiece) {
+        if (selectedPiece.player === WHITE_PLAYER && selectedPiece.row === 0) {
+            selectedPiece.type = QUEEN;
+            selectedPiece.img.closest("td").innerHTML = ''
+            selectedPiece.img = selectedPiece.imgToElement("/images/whiteQueen.jpg")
+        }
+        if (selectedPiece.player === BLACK_PLAYER && selectedPiece.row === 7) {
+            selectedPiece.type = QUEEN;
+            selectedPiece.img.closest("td").innerHTML = ''
+            selectedPiece.img = selectedPiece.imgToElement("/images/blackQueen.jpg")
+
+        }
+    }
     checkPossibleCaptures() {
         // No need to check who is the current player. It will return an empty array anyway.
         let possibleCaptures = [];
@@ -119,7 +132,7 @@ class BoardData {
                 if ((row % 2 === 0 && col % 2 !== 0) || (row % 2 !== 0 && col % 2 === 0)) {
                     if (row <= 2) {
                         result.push(new Pieces(row, col, SOLDIER, BLACK_PLAYER, "/images/blackSoldier.jpg"))
-                    } else if (row >= 5 && row !== 6) {
+                    } else if (row >= 5) {
                         result.push(new Pieces(row, col, SOLDIER, WHITE_PLAYER, "/images/whiteSoldier.jpg"))
                     }
                 }

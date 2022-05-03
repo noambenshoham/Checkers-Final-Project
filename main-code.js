@@ -35,7 +35,7 @@ function onCellClick(row, col) {
         // If so - do not end turn yet.
         if (boardData.doubleCaptureIsOption(selectedPiece))
             return
-
+        boardData.trySoldierToQueen(selectedPiece);
         selectedPiece.doubleCapturing = undefined;
         boardData.endTurn();
         boardData.isGameOver()

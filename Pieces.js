@@ -18,6 +18,7 @@ class Pieces {
         return newElement
     }
     oneStepCellsInfo() {
+
         let cells = [];
         let direction = 1;
         if (this.player === WHITE_PLAYER) direction = -1;
@@ -27,6 +28,9 @@ class Pieces {
         if (this.doubleCapturing === true) {
             cells.push([this.row - direction, this.col + 1])
             cells.push([this.row - direction, this.col - 1])
+        }
+        if (this.type === QUEEN) {
+            cells = this.getQueenMoves();
         }
         return this.filterOutBoardCells(cells);
     }
@@ -71,6 +75,31 @@ class Pieces {
         }
         possibleRegularMoves = this.filterOutBoardCells(possibleRegularMoves);
         return possibleRegularMoves;
+    }
+    getQueenMoves() {
+        let possibleMoves = []
+        possibleMoves = possibleMoves.concat(this.getMovesInDirection(1, 1))
+        possibleMoves = possibleMoves.concat(this.getMovesInDirection(1, -1))
+        possibleMoves = possibleMoves.concat(this.getMovesInDirection(-1, 1))
+        possibleMoves = possibleMoves.concat(this.getMovesInDirection(-1, -1))
+        return possibleMoves
+    }
+    getMovesInDirection(directionRow, directionCol) {
+        let result = [];
+        for (let i = 1; i < BOARD_SIZE; i++) {
+            let row = this.row + directionRow * i;
+            let col = this.col + directionCol * i;
+            if (boardData.getPiece(row, col) === undefined) {
+                result.push([row, col]);
+            } else if (this.player !== boardData.getPiece(row, col).player) {
+                result.push([row, col]);
+                return result;
+            } else if (this.player === boardData.getPiece(row, col).player) {
+                return result;
+            }
+        }
+        return result;
+
     }
     filterOutBoardCells(cells) {
         let filteredCells = [];
