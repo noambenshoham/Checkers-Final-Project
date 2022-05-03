@@ -11,9 +11,9 @@ class BoardData {
             // By the absolute distance of the move - check if clicked in mind to capture.
             // Capture if true
             if (Math.abs(selectedPiece.row - row) !== 1) {
-                let eatenPieceCell = selectedPiece.findEatenPieceCell(row, col);
-                this.removedPiece = this.removePiece(eatenPieceCell[0], eatenPieceCell[1]);
-                boardEl.rows[eatenPieceCell[0]].cells[eatenPieceCell[1]].innerHTML = '';
+                let capturedPieceCell = selectedPiece.findCapturedPieceCell(row, col);
+                this.removedPiece = this.removePiece(capturedPieceCell[0], capturedPieceCell[1]);
+                boardEl.rows[capturedPieceCell[0]].cells[capturedPieceCell[1]].innerHTML = '';
             }
             selectedPiece.row = row;
             selectedPiece.col = col;
@@ -28,7 +28,6 @@ class BoardData {
             selectedPiece.doubleCapturing = true;
             selectedPiece.moves = selectedPiece.getCaptureMoves();
             if (selectedPiece.moves.length !== 0) {
-                this.removedPiece = undefined;
                 return true
             }
         }

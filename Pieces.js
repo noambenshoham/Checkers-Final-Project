@@ -113,13 +113,14 @@ class Pieces {
         }
         return filteredCells;
     }
-    findEatenPieceCell(row, col) {
+    findCapturedPieceCell(row, col) {
         let enemyCell = []
-        if (this.row < row) enemyCell.push(this.row + 1)
-        if (this.row > row) enemyCell.push(this.row - 1)
+        // Changed for finding pieces that captured by queen.
+        if (this.row < row) enemyCell.push(row - 1)
+        if (this.row > row) enemyCell.push(row + 1)
 
-        if (this.col < col) enemyCell.push(this.col + 1)
-        if (this.col > col) enemyCell.push(this.col - 1)
+        if (this.col < col) enemyCell.push(col - 1)
+        if (this.col > col) enemyCell.push(col + 1)
         return enemyCell
     }
 }
